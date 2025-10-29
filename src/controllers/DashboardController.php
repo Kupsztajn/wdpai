@@ -2,24 +2,55 @@
 
 require_once 'AppController.php';
 
-class DashboardCntroller extends AppController {
+class DashboardController extends AppController {
 
-    public function login()
+    public function dashboard()
     {
-        // TODO pobieramy z formularza email, haslo
-        // todo sprawdzamy czy taki user istnieje w db
-        // jezeli nie istnieje to zwracamy odpowiednie komunikaty
-        //jezeli istnieje to logujemy usera (tworzymy sesje)
-        return $this->render('login');
+        // Logic for displaying the dashboard
+        return $this->render('dashboard');
     }
 
-    public function logout()
+    public function index()
     {
-        // Logic for logging out the user
-        session_start();
-        session_destroy();
-        header('Location: /login');
-        exit();
+        $cards = [
+            [
+                'id' => 1,
+                'title' => 'Ace of Spades',
+                'subtitle' => 'Legendary card',
+                'imageUrlPath' => 'https://deckofcardsapi.com/static/img/AS.png',
+                'href' => '/cards/ace-of-spades'
+            ],
+            [
+                'id' => 2,
+                'title' => 'Queen of Hearts',
+                'subtitle' => 'Classic romance',
+                'imageUrlPath' => 'https://deckofcardsapi.com/static/img/QH.png',
+                'href' => '/cards/queen-of-hearts'
+            ],
+            [
+                'id' => 3,
+                'title' => 'King of Clubs',
+                'subtitle' => 'Royal strength',
+                'imageUrlPath' => 'https://deckofcardsapi.com/static/img/KC.png',
+                'href' => '/cards/king-of-clubs'
+            ],
+            [
+                'id' => 4,
+                'title' => 'Jack of Diamonds',
+                'subtitle' => 'Sly and sharp',
+                'imageUrlPath' => 'https://deckofcardsapi.com/static/img/JD.png',
+                'href' => '/cards/jack-of-diamonds'
+            ],
+            [
+                'id' => 5,
+                'title' => 'Ten of Hearts',
+                'subtitle' => 'Lucky draw',
+                'imageUrlPath' => 'https://deckofcardsapi.com/static/img/0H.png',
+                'href' => '/cards/ten-of-hearts'
+            ],
+        ];
+
+        return $this->render('dashboard', ['items' => $cards]);
     }
 
 }

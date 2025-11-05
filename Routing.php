@@ -6,7 +6,8 @@ class Routing {
     public static $routes = [
         'login' => 'SecurityController@login',
         'logout' => 'SecurityController@logout',
-        'dashboard' => 'DashboardController@dashboard'
+        'dashboard' => 'DashboardController@dashboard',
+        'register' => 'SecurityController@register'
     ];
 
     public static function run($path) {

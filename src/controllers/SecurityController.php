@@ -6,23 +6,7 @@ class SecurityController extends AppController {
 
 
         // ======= LOKALNA "BAZA" UŻYTKOWNIKÓW =======
-    private static array $users = [
-        [
-            'email' => 'anna@example.com',
-            'password' => '123', // test123
-            'first_name' => 'Anna'
-        ],
-        [
-            'email' => 'bartek@example.com',
-            'password' => '123', // haslo456
-            'first_name' => 'Bartek'
-        ],
-        [
-            'email' => 'celina@example.com',
-            'password' => '123', // qwerty
-            'first_name' => 'Celina'
-        ],
-    ];
+
 
     public function login()
     {

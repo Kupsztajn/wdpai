@@ -1,12 +1,18 @@
 <?php
 
 require_once 'AppController.php';
+require_once __DIR__.'/../repository/UserRepository.php';
 
 class SecurityController extends AppController {
 
 
         // ======= LOKALNA "BAZA" UŻYTKOWNIKÓW =======
 
+    private $userRepository;
+    public function __construct(){
+        $this->userRepository = new UserRepository();
+
+    }
 
     public function login()
     {
@@ -21,7 +27,7 @@ class SecurityController extends AppController {
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
 
-        if($email === ''){
+        if($email === '' || $password === ''){
             return $this->render('login', ['message' => 'Email cannot be empty']);
         }
 
@@ -29,20 +35,15 @@ class SecurityController extends AppController {
             return $this->render('login', ['message' => 'Fill all fields']);
         }
 
-       //TODO replace with search from database
-        $userRow = null;
-        foreach (self::$users as $u) {
-            if (strcasecmp($u['email'], $email) === 0) {
-                $userRow = $u;
-                break;
-            }
-        }
+        $userRepository = new UserRepository();
+        $user = $userRepository->getUserByEmail($email);
 
-        if (!$userRow) {
+
+        if (!$user) {
             return $this->render('login', ['message' => 'User not found']);
         }
 
-        if ($password !== $userRow['password']) {
+        if (!password_verify($password, $user['password'])) {
             return $this->render('login', ['message' => 'Wrong password']);
         }
         // TODO możemy przechowywać sesje użytkowika lub token
@@ -55,6 +56,7 @@ class SecurityController extends AppController {
         // todo sprawdzamy czy taki user istnieje w db
         // jezeli nie istnieje to zwracamy odpowiednie komunikaty
         // jezeli istnieje to logujemy usera (tworzymy sesje)
+        
         return $this->render('dashboard');
     }
 
@@ -76,8 +78,30 @@ class SecurityController extends AppController {
 
         var_dump($_POST);
         
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password1'] ?? '';
+        $password2 = $_POST['password2'] ?? '';
+        $firstname = $_POST['firstname'] ?? '';
+        $lastname = $_POST['lastname'] ?? '';
 
-        // TODO pobieramy z formularza email, haslo, imie itp.
+        if (empty($email) || empty($password) || empty($firstname)) {
+            return $this->render('register', ['message' => 'Fill all the fields']);
+
+        }
+
+        if ($password !== $password2) {
+            return $this->render('register', ['message' => 'Passwords should be the same']);
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $this->userRepository->createUser(
+            $email,
+            $hashedPassword,
+            $firstname,
+            $lastname
+        );
+
+         // TODO pobieramy z formularza email, haslo, imie itp.
         // todo sprawdzamy czy taki user juz nie istnieje w db
         // jezeli istnieje to zwracamy odpowiednie komunikaty
         // jezeli nie istnieje to tworzymy nowego usera w db

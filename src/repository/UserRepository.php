@@ -19,7 +19,7 @@ class UserRepository extends Repository
         return $user;
     }
 
-    public function getUserByEmail(string $email): ?array {
+    public function getUserByEmail(string $email) {
         $stmt = $this->database->connect()->prepare('
             SELECT * FROM users WHERE email = :email
         ');

@@ -2,8 +2,15 @@
 
 require_once 'AppController.php';
 require_once __DIR__.'/../repository/UserRepository.php';
+require_once __DIR__.'/../repository/CardsRepository.php';
 
 class DashboardController extends AppController {
+
+    private $cardsRepository;
+    
+    public function __construct(){
+        $this->cardsRepository = new CardsRepository();
+    }
 
     public function dashboard()
     {
@@ -59,4 +66,43 @@ class DashboardController extends AppController {
         return $this->render('dashboard', ['items' => $cards]);
     }
 
+
+    public function search()
+    {
+
+        
+        header('Content-Type: application/json');
+        http_response_code(200);
+
+        if (!$this->isPost()) {
+            http_response_code(405);
+
+            echo json_encode([
+                'status' => 'Method not allowed'
+            ]);
+            exit();
+        }
+
+        $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
+
+        if($contentType !== "application/json") {
+            http_response_code(415);
+            echo json_encode([
+                'status' => 'Unsupported Media Type'
+            ]);
+            exit();
+        }
+
+        $content = trim(file_get_contents("php://input"));
+        $decoded = json_decode($content, true);
+        $searchTag = $decoded['search'] ?? '';
+
+
+
+        echo json_encode([
+            'status' => 'ok',
+            'cards' => $this->cardsRepository->getCardsByTitle($searchTag)
+        ]);
+        exit();
+    }
 }

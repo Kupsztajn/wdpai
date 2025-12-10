@@ -7,9 +7,38 @@ class Routing {
         'login' => 'SecurityController@login',
         'logout' => 'SecurityController@logout',
         'dashboard' => 'DashboardController@dashboard',
-        'register' => 'SecurityController@register'
+        'register' => 'SecurityController@register',
+        'search-cards' => 'DashboardController@search'
     ];
 
+        public static function run($path) {
+        switch($path) {
+            case 'login':
+                $controller = new SecurityController();
+                $controller->login();
+                break;
+            case 'logout':
+                $controller = new SecurityController();
+                $controller->logout();
+                break;
+            case 'dashboard':
+                $controller = new DashboardController();
+                $controller->dashboard();
+                break;
+            case 'register':
+                $controller = new SecurityController();
+                $controller->register();
+                break;
+            case 'search-cards':
+                $controller = new DashboardController();
+                $controller->search();
+                break;
+            default:
+                include 'public/views/404.html';
+                break;
+        }
+    }
+/*
     public static function run($path) {
         if (array_key_exists($path, self::$routes)) {
             // Pobierz wpis z tablicy routes
@@ -27,4 +56,6 @@ class Routing {
             include 'public/views/404.html';
         }
     }
+
+*/
 }

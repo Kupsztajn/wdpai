@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Repository.php';
+require_once __DIR__.'/../models/Card.php';
 
 class CardsRepository extends Repository{
 
@@ -16,6 +17,18 @@ class CardsRepository extends Repository{
         $stmt->bindParam(':search', $searchString, PDO::PARAM_STR);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $cards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $result = [];
+        foreach ($cards as $card) {
+            $result[] = new Card(
+                $card['title'],
+                $card['description'],
+                $card['image'],
+                $card['id']
+            );
+        }
+
+        return $result;
     }
 }
